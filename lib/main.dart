@@ -10,7 +10,7 @@ void main() {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => Home(),
-        'new':(context) =>Sceond(),
+        // 'new':(context) =>Sceond(),
       },
     ),
   );

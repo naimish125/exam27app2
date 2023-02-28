@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import 'Modal.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -9,113 +11,134 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
+  TextEditingController txtname = TextEditingController();
+  TextEditingController txtumber = TextEditingController();
+  List<modal> cont = [];
 
+  @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: Icon(
-            Icons.arrow_back,
-            color: Colors.black26,
+          centerTitle: true,
+          title: Text(
+            "Contact",
+            style: TextStyle(fontWeight: FontWeight.bold,),
           ),
-          actions: [
-            PopupMenuButton(
-              color: Colors.black,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.star),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text("Get The App"),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.star),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text("Get The App"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+          backgroundColor: Colors.black,
+          leading: Icon(Icons.arrow_back),
+          actions: [Icon(Icons.people_alt_sharp),],
         ),
-        body: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Text(
-                    "MY CONTECT",
-                    style: TextStyle(color: Colors.black26),
-                  ),
-                ],
+        body: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Text(
+                "My Contact",
+                style: TextStyle(fontSize: 20),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  backgroundColor: Colors.grey.shade900,
-                  onPressed: () {
-                    setState(() {
-                      Navigator.pushNamed(context, 'new').then((value) {setState(() {
+              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.all(30),
+                child: TextField(
 
-                      });});
-                    });
-                  },
-                  child: Icon(Icons.add,size: 30,color: Colors.white),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+
+                    ),
+                    hintText: "Types Name or Number",
+                  ),
                 ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-  Widget Box(String a,String b,index)
-  {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          Navigator.pushNamed(context, 'second',arguments: index);
-        });
-      },
-      child: Container(
-        height: 50,
-        child: Row(
-          children: [
-            Text("$a",style: TextStyle(color: Colors.white,fontSize: 20)),
-            Expanded(child: SizedBox()),
-            InkWell(onTap: () {
-              launchUrl(Uri.parse('tel:$b'));
-            },child: Icon(Icons.call,color: Colors.white)),
-            SizedBox(width: 10,),
-            InkWell(onTap: () {
-              launchUrl(Uri.parse('sms:$b'));
-            },child: Icon(Icons.message,color: Colors.white)),
-          ],
+              IconButton(
+                alignment: Alignment.bottomLeft,
+
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: txtname,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: "Enter Name",
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: txtumber,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: "Enter Number",
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                modal m1 = modal(
+                                    Name: txtname.text, Number: txtumber.text);
+                                setState(() {
+                                  cont.add(m1);
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Text("Add contact"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.add),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cont.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+
+                      title: Text("${cont[index].Name}"),
+                      subtitle: Text("${cont[index].Number}"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.sms),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.call),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-
